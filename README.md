@@ -144,37 +144,41 @@ A `MAX_RESEARCH_STEPS = 3` safeguard prevents infinite loops. If the agent hasn'
 
 ## Setup
 
-### 1. Clone / Navigate to the project
+### Using `uv` (Recommended - Ultra Fast)
 
-```bash
-cd mini-research-agent
-```
+1. **Install dependencies and create virtual environment**:
+   ```bash
+   uv sync
+   ```
+2. **Run the agent**:
+   ```bash
+   uv run main.py
+   ```
 
-### 2. Create a virtual environment
+---
 
-```bash
-python -m venv .venv
-```
+### Using standard `pip`
 
-Activate (Windows):
+1. **Create virtual environment**:
+   ```bash
+   python -m venv .venv
+   ```
+   Activate (Windows): `.venv\Scripts\activate`  
+   Activate (macOS/Linux): `source .venv/bin/activate`
 
-```bash
-.venv\Scripts\activate
-```
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Activate (macOS/Linux):
+3. **Run the agent**:
+   ```bash
+   python main.py
+   ```
 
-```bash
-source .venv/bin/activate
-```
+---
 
-### 3. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Configure API keys
+### Configure API keys
 
 Edit the `.env` file with your actual keys:
 
@@ -187,12 +191,6 @@ TAVILY_API_KEY=tvly-...
 - **Tavily key**: [app.tavily.com](https://app.tavily.com) (free tier: 1,000 searches/month)
 
 > **Note**: The project also supports OpenAI (`OPENAI_API_KEY`) and xAI (`XAI_API_KEY`) — just set the appropriate key in `.env` and the agent will auto-detect the provider.
-
-### 5. Run
-
-```bash
-python main.py
-```
 
 ---
 

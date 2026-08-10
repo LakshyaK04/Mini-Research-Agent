@@ -1,0 +1,14 @@
+[project]
+name = "mini-research-agent"
+version = "0.1.0"
+description = "A modular educational AI agent built with LangChain, LangGraph, Groq, and Tavily."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "langgraph",
+    "langchain",
+    "langchain-openai",
+    "langchain-groq",
+    "langchain-tavily",
+    "python-dotenv",
+]
