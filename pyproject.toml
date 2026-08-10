@@ -7,7 +7,6 @@ requires-python = ">=3.10"
 dependencies = [
     "langgraph",
     "langchain",
-    "langchain-openai",
     "langchain-groq",
     "langchain-tavily",
     "python-dotenv",

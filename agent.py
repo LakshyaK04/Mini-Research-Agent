@@ -11,24 +11,16 @@ Centralizes:
 import os
 import sys
 from dotenv import load_dotenv
+from langchain_groq import ChatGroq
+
+from tools import search_web, calculator
 
 # Ensure UTF-8 output encoding for Windows terminal
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-# ── Load environment variables FIRST ──────────
-# Must happen before importing anything that reads API keys.
+# Load environment variables (.env)
 load_dotenv()
-
-# ── Map provider key to OpenAI key ───────────
-# ChatOpenAI reads OPENAI_API_KEY. We map whichever provider
-# key is in .env so everything works seamlessly.
-for key_name in ("GROQ_API_KEY", "XAI_API_KEY"):
-    if os.environ.get(key_name) and not os.environ.get("OPENAI_API_KEY"):
-        os.environ["OPENAI_API_KEY"] = os.environ[key_name]
-
-from langchain_openai import ChatOpenAI
-from tools import search_web, calculator
 
 # ── Tools available to the agent ─────────────
 TOOLS = [search_web, calculator]
@@ -52,21 +44,13 @@ SYSTEM_PROMPT = (
 )
 
 
-# ── Factory functions ─────────────────────────
+# ── LLM Factory functions ─────────────────────
 
 def get_llm():
-    """Return an LLM instance supporting OpenAI, Groq, or xAI based on env variables."""
-    if os.environ.get("GROQ_API_KEY"):
-        from langchain_groq import ChatGroq
-        return ChatGroq(model="llama-3.1-8b-instant", temperature=0)
-    
-    if os.environ.get("XAI_API_KEY") and not os.environ.get("OPENAI_API_KEY"):
-        return ChatOpenAI(model="grok-3-mini", base_url="https://api.x.ai/v1", temperature=0)
-
-    # Default: OpenAI
-    return ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    """Return the free Groq LLM instance."""
+    return ChatGroq(model="llama-3.1-8b-instant", temperature=0)
 
 
 def get_llm_with_tools():
-    """Return an LLM instance with both tools bound for tool-calling."""
+    """Return the Groq LLM instance with tools bound."""
     return get_llm().bind_tools(TOOLS)
