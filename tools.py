@@ -104,7 +104,9 @@ def calculator(expression: str) -> str:
         The numeric result as a string.
     """
     try:
-        tree = ast.parse(expression.strip(), mode="eval")
+        # Strip commas (e.g. 38,140,000 -> 38140000) so commas don't get parsed as Python tuples
+        clean_expr = expression.replace(",", "").strip()
+        tree = ast.parse(clean_expr, mode="eval")
         result = _safe_eval(tree)
         # Format nicely: drop .0 for whole numbers
         if isinstance(result, float) and result == int(result) and abs(result) < 1e15:

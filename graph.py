@@ -81,6 +81,17 @@ def agent_node(state: AgentState) -> dict:
     llm = get_llm_with_tools()
     response = llm.invoke(state["messages"])
 
+    # ── Deduplicate tool calls if LLM generated identical duplicates ──
+    if response.tool_calls:
+        seen = set()
+        unique_tool_calls = []
+        for tc in response.tool_calls:
+            key = (tc["name"], str(tc["args"]))
+            if key not in seen:
+                seen.add(key)
+                unique_tool_calls.append(tc)
+        response.tool_calls = unique_tool_calls
+
     # ── Observable output ──
     if response.tool_calls:
         for tc in response.tool_calls:
@@ -161,8 +172,8 @@ def evaluate_research(state: AgentState) -> dict:
                 "You are evaluating whether enough information has been "
                 "gathered to answer the user's question. Review the full "
                 "conversation including all tool results. "
-                "Decide if the information is SUFFICIENT for a complete answer, "
-                "or if critical information is still MISSING."
+                "Decide if the information is SUFFICIENT (YES) or if critical information is still MISSING (NO). "
+                "Note: If the user asked for a fact (e.g. population) and a calculation (e.g. 5%), and BOTH a web search result and a successful calculator result are present in the messages, mark it as SUFFICIENT (YES)."
             )
         ),
         *state["messages"],
@@ -176,11 +187,11 @@ def evaluate_research(state: AgentState) -> dict:
         print(f"   Enough information: {status}")
         print(f"   Reason: {decision.reason}")
         if not is_sufficient:
-            feedback = SystemMessage(
+            feedback = HumanMessage(
                 content=(
                     f"RESEARCH EVALUATION: The gathered information is INSUFFICIENT. "
                     f"Reason: {decision.reason}. "
-                    f"You MUST use search_web or calculator to gather the missing details."
+                    f"Please use search_web or calculator to gather the missing details."
                 )
             )
             return {

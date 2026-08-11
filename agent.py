@@ -36,6 +36,7 @@ SYSTEM_PROMPT = (
     "- Use search_web when you need current facts, statistics, news, "
     "or any information you do not confidently know.\n"
     "- Use calculator for any arithmetic — do NOT calculate in your head.\n"
+    "- For questions requiring BOTH web search and calculation (e.g. 'what is the population of Tokyo and what is 5% of it?'), ALWAYS perform the web search FIRST to find the actual number, then use the calculator on that number in the next step.\n"
     "- Do NOT use tools when you can confidently answer from general knowledge.\n"
     "- Always output valid JSON parameters when invoking a tool.\n"
     "- Always use information returned by tools — never invent facts or URLs.\n"
