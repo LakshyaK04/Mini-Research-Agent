@@ -212,10 +212,20 @@ def final_answer_node(state: AgentState) -> dict:
 
     response = llm.invoke(clean_messages + [synthesis_instruction])
 
+    # ── Clean up LLM output formatting ──
+    content = response.content.strip()
+    import re
+    # Remove repetitive header prefixes if LLM echoed them
+    while True:
+        cleaned = re.sub(r'^(?:📋\s*FINAL\s*ANSWER|FINAL\s*ANSWER|\*\*Final\s*Answer:\*\*|───+|\-\-\-+)\s*', '', content, flags=re.IGNORECASE).strip()
+        if cleaned == content:
+            break
+        content = cleaned
+
     # ── Display ──
     print(f"\n{'─' * 40}")
     print(f"\n📋 FINAL ANSWER\n")
-    print(response.content)
+    print(content)
 
     return {"messages": [response]}
 
