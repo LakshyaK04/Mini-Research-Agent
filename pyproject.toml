@@ -10,4 +10,5 @@ dependencies = [
     "langchain-groq",
     "langchain-tavily",
     "python-dotenv",
+    "streamlit>=1.61.1",
 ]

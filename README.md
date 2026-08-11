@@ -150,7 +150,13 @@ A `MAX_RESEARCH_STEPS = 3` safeguard prevents infinite loops. If the agent hasn'
    ```bash
    uv sync
    ```
-2. **Run the agent**:
+
+2. **Run the Streamlit Web Interface** 🌐:
+   ```bash
+   uv run streamlit run app.py
+   ```
+
+3. **Run the Terminal CLI Interface** 💻:
    ```bash
    uv run main.py
    ```
