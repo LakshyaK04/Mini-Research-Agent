@@ -175,9 +175,23 @@ def evaluate_research(state: AgentState) -> dict:
         print(f"\n🧠 Research Evaluation (step {count}/{MAX_RESEARCH_STEPS})")
         print(f"   Enough information: {status}")
         print(f"   Reason: {decision.reason}")
+        if not is_sufficient:
+            feedback = SystemMessage(
+                content=(
+                    f"RESEARCH EVALUATION: The gathered information is INSUFFICIENT. "
+                    f"Reason: {decision.reason}. "
+                    f"You MUST use search_web or calculator to gather the missing details."
+                )
+            )
+            return {
+                "messages": [feedback],
+                "research_count": count,
+                "research_decision": "insufficient",
+            }
+
         return {
             "research_count": count,
-            "research_decision": "sufficient" if is_sufficient else "insufficient",
+            "research_decision": "sufficient",
         }
     except Exception as e:
         # If evaluation itself fails, default to sufficient to avoid loops
