@@ -26,7 +26,7 @@ def _get_tavily():
     global _tavily_client
     if _tavily_client is None:
         from langchain_tavily import TavilySearch
-        _tavily_client = TavilySearch(max_results=3, search_depth="advanced")
+        _tavily_client = TavilySearch(max_results=3, search_depth="basic")
     return _tavily_client
 
 
@@ -45,8 +45,11 @@ def search_web(query: str) -> str:
     """
     try:
         results = _get_tavily().invoke({"query": query})
-        # results is already a formatted string from TavilySearch
-        return str(results)
+        # Format and truncate snippet length to stay within Groq free-tier TPM limits (6000 tokens)
+        res_str = str(results)
+        if len(res_str) > 2000:
+            res_str = res_str[:2000] + "... [truncated for brevity]"
+        return res_str
     except Exception as e:
         return f"Search failed: {e}. Try answering with the information you already have."
 
