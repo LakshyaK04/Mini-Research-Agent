@@ -55,7 +55,7 @@ the final answer."""
 
 
 def get_llm():
-    return ChatGroq(model="llama-3.1-8b-instant", temperature=0)
+    return ChatGroq(model="openai/gpt-oss-120b", temperature=0)
 
 
 def get_llm_with_tools():
